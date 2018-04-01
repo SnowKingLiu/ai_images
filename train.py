@@ -14,8 +14,8 @@ from networks import recognition_model
 
 # 设置参数
 ImageFile.LOAD_TRUNCATED_IMAGES = True
-EPOCHS = 100
-BATCH_SIZE = 1024
+EPOCHS = 1000000
+BATCH_SIZE = 128
 LEARNING_RATE = 0.0002
 BETA_1 = 0.5
 
