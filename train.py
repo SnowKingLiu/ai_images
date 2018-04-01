@@ -15,7 +15,7 @@ from networks import recognition_model
 # 设置参数
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 EPOCHS = 1000000
-BATCH_SIZE = 128
+BATCH_SIZE = 1024
 LEARNING_RATE = 0.0002
 BETA_1 = 0.5
 
@@ -43,7 +43,7 @@ def train():
         rec.load_weights("recognition_weight.hdf5")
     rec_optimizer = tf.keras.optimizers.Adam(lr=LEARNING_RATE, beta_1=BETA_1)
     # 配置识别网络
-    rec.compile(loss="binary_crossentropy", optimizer=rec_optimizer)
+    rec.compile(loss="categorical_crossentropy", optimizer=rec_optimizer)
 
     # 开始训练
     check_pointer = tf.keras.callbacks.ModelCheckpoint(filepath="recognition_weight.hdf5", verbose=1,

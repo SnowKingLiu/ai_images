@@ -43,3 +43,8 @@ def recognition_model():
     model.add(tf.keras.layers.Activation("softmax"))
 
     return model
+
+
+if __name__ == '__main__':
+    model = recognition_model()
+    model.summary()
