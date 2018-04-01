@@ -40,6 +40,6 @@ def recognition_model():
     # 2个神经元的全连接层
     model.add(tf.keras.layers.Dense(2))
     # 添加Sigmoid激活层
-    model.add(tf.keras.layers.Activation("sigmoid"))
+    model.add(tf.keras.layers.Activation("softmax"))
 
     return model

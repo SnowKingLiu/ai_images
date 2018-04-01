@@ -14,8 +14,8 @@ from networks import recognition_model
 
 # 设置参数
 ImageFile.LOAD_TRUNCATED_IMAGES = True
-EPOCHS = 100
-BATCH_SIZE = 128
+EPOCHS = 2
+BATCH_SIZE = 1024
 LEARNING_RATE = 0.0002
 BETA_1 = 0.5
 
@@ -43,16 +43,20 @@ def train():
     rec.compile(loss="binary_crossentropy", optimizer=rec_optimizer)
 
     # 开始训练
-    for epoch in range(10):
-        for index in range(int(input_data.shape[0]/BATCH_SIZE)):
-            input_batch = input_data[index*BATCH_SIZE: (index + 1)*BATCH_SIZE]
-            output_batch = output_data[index*BATCH_SIZE: (index + 1)*BATCH_SIZE]
-            rec_loss = rec.train_on_batch(input_batch, output_batch)
+    check_pointer = tf.keras.callbacks.ModelCheckpoint(filepath="./recognition_weight.hdf5", verbose=1,
+                                                       save_best_only=True)
+    rec.fit(x=input_data, y=output_data, epochs=EPOCHS, batch_size=BATCH_SIZE, shuffle="batch",
+            validation_data=(input_data, output_data), callbacks=[check_pointer])
 
-            # 打印损失
-            print("第%d次 损失值是: %f" % (index, rec_loss))
-        if epoch % 10 == 9:
-            rec.save_weights("recognition_weight", True)
+    # for index in range(int(input_data.shape[0]/BATCH_SIZE)):
+    #     input_batch = input_data[index*BATCH_SIZE: (index + 1)*BATCH_SIZE]
+    #     output_batch = output_data[index*BATCH_SIZE: (index + 1)*BATCH_SIZE]
+    #     rec.fit(x=input_batch, y=output_batch, epochs=EPOCHS, batch_size=BATCH_SIZE, shuffle="batch")
+    #     # rec_loss = rec.train_on_batch(input_batch, output_batch)
+    # 打印损失
+    # print("第%d次 损失值是: %f" % (epoch, rec_loss))
+    # if epoch % 10 == 9:
+    #     rec.save_weights("recognition_weight", True)
 
 
 def get_img():
