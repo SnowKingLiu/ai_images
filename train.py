@@ -4,13 +4,13 @@
 import glob
 import os
 
+from matplotlib import pyplot
 from scipy import misc
 from PIL import Image, ImageFile
 import numpy as np
 import tensorflow as tf
 
-from networks import recognition_model
-
+from networks import recognition_model, cifar_model
 
 # 设置参数
 ImageFile.LOAD_TRUNCATED_IMAGES = True
@@ -20,7 +20,51 @@ LEARNING_RATE = 0.0002
 BETA_1 = 0.5
 
 
+def unpickle(file):
+    import pickle
+    with open(file, 'rb') as fo:
+        dic = pickle.load(fo, encoding='bytes')
+    return dic
+
+
+def list2onehot(int_list):
+    one_hot = np.zeros((len(int_list), len(set(int_list))))
+    for i in range(len(int_list)):
+        one_hot[i][int_list[i]] = 1
+    return one_hot
+
+
 def train():
+    dic = unpickle("data_batch_1")
+    data = dic[b'data']
+    input_data = np.array([arr.reshape(32, 32, 3) for arr in data])
+    output_data = list2onehot(np.array(dic[b'labels']))
+    cif = cifar_model()
+    if os.path.isfile("cifar_weight.hdf5"):
+        cif.load_weights("cifar_weight.hdf5")
+    rec_optimizer = tf.keras.optimizers.Adam(lr=LEARNING_RATE, beta_1=BETA_1)
+    # 配置识别网络
+    cif.compile(loss="categorical_crossentropy", optimizer=rec_optimizer)
+
+    # 开始训练
+    check_pointer = tf.keras.callbacks.ModelCheckpoint(filepath="cifar_weight.hdf5", verbose=1,
+                                                       save_best_only=True)
+    cif.fit(x=input_data, y=output_data, epochs=EPOCHS, batch_size=BATCH_SIZE, shuffle="batch",
+            validation_data=(input_data, output_data), callbacks=[check_pointer])
+
+
+def get_img(arr):
+    # 得到RGB通道
+    r = Image.fromarray(arr[0]).convert('L')
+    g = Image.fromarray(arr[1]).convert('L')
+    b = Image.fromarray(arr[2]).convert('L')
+    image = Image.merge("RGB", (r, g, b))
+    # 显示图片
+    pyplot.imshow(image)
+    pyplot.show()
+
+
+def train_clothing():
     # 获取训练数据
     image_list = []
     label_list = []
