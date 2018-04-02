@@ -13,25 +13,13 @@ import tensorflow as tf
 from networks import recognition_model, cifar_model
 
 # 设置参数
+from utils import unpickle, list2onehot
+
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 EPOCHS = 1000000
 BATCH_SIZE = 1024
 LEARNING_RATE = 0.0002
 BETA_1 = 0.5
-
-
-def unpickle(file):
-    import pickle
-    with open(file, 'rb') as fo:
-        dic = pickle.load(fo, encoding='bytes')
-    return dic
-
-
-def list2onehot(int_list):
-    one_hot = np.zeros((len(int_list), len(set(int_list))))
-    for i in range(len(int_list)):
-        one_hot[i][int_list[i]] = 1
-    return one_hot
 
 
 def train():

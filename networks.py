@@ -87,5 +87,5 @@ def cifar_model():
 
 
 if __name__ == '__main__':
-    model = recognition_model()
+    model = cifar_model()
     model.summary()
