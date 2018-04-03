@@ -56,14 +56,28 @@ def cifar_model():
     cif_model.add(tf.keras.layers.MaxPool2D(pool_size=(2, 2)))
 
     # 卷积层
-    cif_model.add(tf.keras.layers.Conv2D(64, (5, 5)))
+    cif_model.add(tf.keras.layers.Conv2D(64, (5, 5), padding='same'))
     # 添加激活函数
     cif_model.add(tf.keras.layers.Activation("relu"))
     # 池化层
     cif_model.add(tf.keras.layers.MaxPool2D(pool_size=(2, 2)))
 
     # 卷积层
-    cif_model.add(tf.keras.layers.Conv2D(128, (5, 5)))
+    cif_model.add(tf.keras.layers.Conv2D(128, (5, 5), padding='same'))
+    # 添加激活函数
+    cif_model.add(tf.keras.layers.Activation("relu"))
+    # 池化层
+    cif_model.add(tf.keras.layers.MaxPool2D(pool_size=(2, 2)))
+
+    # 卷积层
+    cif_model.add(tf.keras.layers.Conv2D(256, (5, 5), padding='same'))
+    # 添加激活函数
+    cif_model.add(tf.keras.layers.Activation("relu"))
+    # 池化层
+    cif_model.add(tf.keras.layers.MaxPool2D(pool_size=(2, 2)))
+
+    # 卷积层
+    cif_model.add(tf.keras.layers.Conv2D(512, (5, 5), padding='same'))
     # 添加激活函数
     cif_model.add(tf.keras.layers.Activation("relu"))
     # 池化层

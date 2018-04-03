@@ -17,16 +17,22 @@ from utils import unpickle, list2onehot
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 EPOCHS = 1000000
-BATCH_SIZE = 1024
+BATCH_SIZE = 2048
 LEARNING_RATE = 0.0002
 BETA_1 = 0.5
 
 
 def train():
-    dic = unpickle("data_batch_1")
-    data = dic[b'data']
-    input_data = np.array([arr.reshape(32, 32, 3) for arr in data])
-    output_data = list2onehot(np.array(dic[b'labels']))
+    dic1 = unpickle("data_batch_1")
+    dic2 = unpickle("data_batch_2")
+    dic3 = unpickle("data_batch_3")
+    dic4 = unpickle("data_batch_4")
+    dic5 = unpickle("data_batch_5")
+    # data1 = dic1[b'data']
+    input_data = np.array([arr.reshape(32, 32, 3) for arr in list(dic1[b'data']) + list(dic2[b'data']) +
+                           list(dic3[b'data']) + list(dic4[b'data']) + list(dic5[b'data'])])
+    output_data = list2onehot(np.array(dic1[b'labels'] + dic2[b'labels'] + dic3[b'labels'] + dic4[b'labels'] +
+                                       dic5[b'labels']))
     cif = cifar_model()
     if os.path.isfile("cifar_weight.hdf5"):
         cif.load_weights("cifar_weight.hdf5")
